@@ -14,7 +14,7 @@
   "author": "hkgnp",
   "license": "MIT",
   "dependencies": {
-    "@logseq/libs": "0.0.1-alpha.30"
+    "@logseq/libs": "^0.0.1-alpha.34"
   },
   "logseq": {
     "id": "logseq-swapblocks-plugin",
