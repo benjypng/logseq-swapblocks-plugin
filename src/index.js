@@ -51,7 +51,6 @@ const main = () => {
         origLeftBlock = await logseq.Editor.getBlock(origBlock.left.id);
       }
 
-      // MOVE BLOCKS WILL FAIL IF THE LEFT BLOCK IS A PAGE, UNLESS THE WORKAROUND BELOW IS IMPLEMENTED.
       if (origLeftBlock.name) {
         const blockToDelete = await logseq.Editor.insertBlock(
           origLeftBlock.name,
