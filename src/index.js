@@ -51,6 +51,11 @@ const main = () => {
         origLeftBlock = await logseq.Editor.getBlock(origBlock.left.id);
       }
 
+      // Below solution covers the following scenarios:
+      // - original and reference blocks are both the 1st blocks
+      // - original and reference blocks are both the middle blocks
+      // DOES NOT COVER:
+      // - either original or reference block is the 1st block
       if (origLeftBlock.name) {
         const blockToDelete = await logseq.Editor.insertBlock(
           origLeftBlock.name,
