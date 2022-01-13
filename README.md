@@ -1,6 +1,6 @@
 # Overview
 
-Simple plugin to swap a reference and its original block.
+Simple plugin to swap a reference block with its original block and preserve it's other references.
 
 # Instructions
 
