@@ -1,6 +1,6 @@
 {
   "name": "logseq-swapblocks-plugin",
-  "version": "0.1alpha",
+  "version": "0.2alpha",
   "description": "",
   "main": "dist/index.html",
   "targets": {
