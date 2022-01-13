@@ -12,11 +12,11 @@ const main = () => {
       // Check if parent is the page
       let refLeftBlock;
       if (refBlock.left.id === refBlock.page.id) {
-        // refLeftBlock = await logseq.Editor.getPage(refBlock.left.id);
-        logseq.App.showMsg(
-          'Unfortunately, this alpha version can only work if the block is not the first block on the page.'
-        );
-        return;
+        refLeftBlock = await logseq.Editor.getPage(refBlock.left.id);
+        // logseq.App.showMsg(
+        //   'Unfortunately, this alpha version can only work if the block is not the first block on the page.'
+        // );
+        // return;
       } else {
         refLeftBlock = await logseq.Editor.getBlock(refBlock.left.id);
       }
@@ -42,25 +42,51 @@ const main = () => {
       // Check if parent is the page
       let origLeftBlock;
       if (origBlock.left.id === origBlock.page.id) {
-        // origLeftBlock = await logseq.Editor.getPage(origBlock.left.id);
-        logseq.App.showMsg(
-          'Unfortunately, this alpha version can only work if the block is not the first block on the page.'
-        );
-        return;
+        origLeftBlock = await logseq.Editor.getPage(origBlock.left.id);
+        // logseq.App.showMsg(
+        //   'Unfortunately, this alpha version can only work if the block is not the first block on the page.'
+        // );
+        // return;
       } else {
         origLeftBlock = await logseq.Editor.getBlock(origBlock.left.id);
       }
 
-      // MOVE BLOCKS WILL FAIL IF THE LEFT BLOCK IS A PAGE
-      await logseq.Editor.moveBlock(refBlock.uuid, origLeftBlock.uuid, {
-        before: false,
-        includeChildren: true,
-      });
+      // MOVE BLOCKS WILL FAIL IF THE LEFT BLOCK IS A PAGE, UNLESS THE WORKAROUND BELOW IS IMPLEMENTED.
+      if (origLeftBlock.name) {
+        const blockToDelete = await logseq.Editor.insertBlock(
+          origLeftBlock.name,
+          '',
+          { isPageBlock: true }
+        );
+        await logseq.Editor.moveBlock(refBlock.uuid, blockToDelete.uuid, {
+          before: false,
+          includeChildren: true,
+        });
+        await logseq.Editor.removeBlock(blockToDelete.uuid);
+      } else {
+        await logseq.Editor.moveBlock(refBlock.uuid, origLeftBlock.uuid, {
+          before: false,
+          includeChildren: true,
+        });
+      }
 
-      await logseq.Editor.moveBlock(origBlock.uuid, refLeftBlock.uuid, {
-        before: false,
-        includeChildren: true,
-      });
+      if (refLeftBlock.name) {
+        const blockToDelete = await logseq.Editor.insertBlock(
+          refLeftBlock.name,
+          '',
+          { isPageBlock: true }
+        );
+        await logseq.Editor.moveBlock(origBlock.uuid, blockToDelete.uuid, {
+          before: false,
+          includeChildren: true,
+        });
+        await logseq.Editor.removeBlock(blockToDelete.uuid);
+      } else {
+        await logseq.Editor.moveBlock(origBlock.uuid, refLeftBlock.uuid, {
+          before: false,
+          includeChildren: true,
+        });
+      }
     }
   );
 };
