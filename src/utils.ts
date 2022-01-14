@@ -1,4 +1,8 @@
-import { BlockEntity, PageEntity } from '@logseq/libs/dist/LSPlugin.user';
+import {
+  BlockEntity,
+  PageEntity,
+  IBatchBlock,
+} from '@logseq/libs/dist/LSPlugin.user';
 
 export const swapBlocks = async (e: any) => {
   // Get reference block
@@ -79,6 +83,40 @@ export const swapBlocks = async (e: any) => {
   } else {
     await logseq.Editor.moveBlock(origBlock.uuid, refLeftBlock.uuid, {
       before: false,
+    });
+  }
+};
+
+export const childrenAsReferences = async (e: any) => {
+  // Get reference block
+  const refBlock = await logseq.Editor.getBlock(e.uuid);
+
+  // Check if trying to do a swap on an original block
+  if (!refBlock.content.startsWith('((') && !refBlock.content.endsWith('))')) {
+    logseq.App.showMsg(
+      'You can only bring child items from the original block.'
+    );
+    return;
+  }
+
+  // // Get original block UUID
+  const regExp = /\(\(([^)]+)\)\)/;
+  const matched = regExp.exec(refBlock.content);
+  const origBlockUUID = matched[1];
+  const origBlock = await logseq.Editor.getBlock(origBlockUUID, {
+    includeChildren: true,
+  });
+
+  if (origBlock.children.length === 0 || !origBlock.children) {
+    logseq.App.showMsg('Original block has no child blocks');
+  } else {
+    // Get children blocks
+    const childBlocksArr: IBatchBlock = origBlock.children;
+
+    // Insert child blocks under the reference block
+    await logseq.Editor.insertBatchBlock(refBlock.uuid, childBlocksArr, {
+      before: false,
+      sibling: false,
     });
   }
 };
