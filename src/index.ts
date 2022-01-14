@@ -10,6 +10,7 @@ const main = () => {
       swapBlocks(e);
     }
   );
+
   logseq.Editor.registerBlockContextMenuItem(
     'Apply children as references',
     async (e) => {
