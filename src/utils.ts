@@ -103,7 +103,7 @@ export const childrenAsReferences = async (e: any) => {
   const regExp = /\(\(([^)]+)\)\)/;
   const matched = regExp.exec(refBlock.content);
   const origBlockUUID = matched[1];
-  const origBlock = await logseq.Editor.getBlock(origBlockUUID, {
+  const origBlock: BlockEntity = await logseq.Editor.getBlock(origBlockUUID, {
     includeChildren: true,
   });
 
@@ -111,7 +111,7 @@ export const childrenAsReferences = async (e: any) => {
     logseq.App.showMsg('Original block has no child blocks');
   } else {
     // Get children blocks
-    const childBlocksArr: IBatchBlock = origBlock.children;
+    const childBlocksArr = origBlock.children as IBatchBlock;
 
     // Insert child blocks under the reference block
     await logseq.Editor.insertBatchBlock(refBlock.uuid, childBlocksArr, {
