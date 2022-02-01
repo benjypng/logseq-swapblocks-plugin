@@ -2,7 +2,7 @@
 
 # Overview
 
-Simple plugin to swap a reference block with its original block and preserve it's other references.
+Simple plugin to swap a reference block or an embed reference block with its original block and preserve it's other references.
 
 # Instructions
 

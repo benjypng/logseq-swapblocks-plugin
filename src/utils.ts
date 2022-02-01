@@ -2,6 +2,7 @@ import {
   BlockEntity,
   PageEntity,
   IBatchBlock,
+  BlockUUID,
 } from '@logseq/libs/dist/LSPlugin.user';
 
 export const swapBlocks = async (e: any) => {
@@ -17,15 +18,20 @@ export const swapBlocks = async (e: any) => {
   }
 
   // Check if trying to do a swap on an original block
-  if (!refBlock.content.startsWith('((') && !refBlock.content.endsWith('))')) {
-    logseq.App.showMsg('Please do a swap only for reference blocks.');
+  if (
+    !refBlock.content.startsWith('((') &&
+    !refBlock.content.endsWith('))') &&
+    !refBlock.content.startsWith('{{embed ((') &&
+    !refBlock.content.endsWith('))}}')
+  ) {
+    logseq.App.showMsg('Please do a swap only for reference and embed blocks.');
     return;
   }
 
-  // // Get original block UUID
   const regExp = /\(\(([^)]+)\)\)/;
   const matched = regExp.exec(refBlock.content);
   const origBlockUUID = matched[1];
+
   const origBlock = await logseq.Editor.getBlock(origBlockUUID, {
     includeChildren: true,
   });
