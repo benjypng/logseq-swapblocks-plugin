@@ -2,7 +2,7 @@
 
 # Overview
 
-Simple plugin to swap a reference block or an embed reference block with its original block and preserve it's other references.
+Simple plugin to swap a block reference or an embed block reference with its original block and preserve it's other references.
 
 # Instructions
 
@@ -10,7 +10,7 @@ Simple plugin to swap a reference block or an embed reference block with its ori
 
 ![](/screenshots/demo2.gif)
 
-## Copy child blocks from original block to the reference block
+## Copy child blocks from original block to the block reference
 
 ![](/screenshots/demo3.gif)
 
