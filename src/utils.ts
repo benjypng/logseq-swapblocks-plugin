@@ -117,7 +117,7 @@ export const childrenAsReferences = async (e: any) => {
     logseq.App.showMsg('Original block has no child blocks');
   } else {
     // Get children blocks
-    const childBlocksArr = origBlock.children as IBatchBlock;
+    const childBlocksArr = origBlock.children as unknown as IBatchBlock;
 
     // Insert child blocks under the reference block
     await logseq.Editor.insertBatchBlock(refBlock.uuid, childBlocksArr, {
