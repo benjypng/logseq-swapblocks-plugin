@@ -1,20 +1,31 @@
-import '@logseq/libs';
-import { swapBlocks, childrenAsReferences } from './utils';
+import "@logseq/libs";
+import {
+  swapBlocks,
+  childrenAsReferences,
+  childrenWithBlockReferences,
+} from "./utils";
 
 const main = () => {
-  console.log('Swap plugin loaded.');
+  console.log("Swap plugin loaded.");
 
   logseq.Editor.registerBlockContextMenuItem(
-    'Swap ref/original blocks',
+    "Swap ref/original blocks",
     async (e) => {
       swapBlocks(e);
     }
   );
 
   logseq.Editor.registerBlockContextMenuItem(
-    'Apply children as references',
+    "Apply children as references",
     async (e) => {
       childrenAsReferences(e);
+    }
+  );
+
+  logseq.Editor.registerBlockContextMenuItem(
+    "Apply children as block references",
+    async (e) => {
+      childrenWithBlockReferences(e);
     }
   );
 };
