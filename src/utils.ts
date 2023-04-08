@@ -10,18 +10,18 @@ export const swapBlocks = async (e: any) => {
 
   // Check if parent is the page
   let refLeftBlock: PageEntity | BlockEntity;
-  if (refBlock.left.id === refBlock.page.id) {
-    refLeftBlock = await logseq.Editor.getPage(refBlock.left.id);
+  if (refBlock!.left.id === refBlock!.page.id) {
+    refLeftBlock = await logseq.Editor.getPage(refBlock!.left.id);
   } else {
-    refLeftBlock = await logseq.Editor.getBlock(refBlock.left.id);
+    refLeftBlock = await logseq.Editor.getBlock(refBlock!.left.id);
   }
 
   // Check if trying to do a swap on an original block
   if (
-    !refBlock.content.startsWith("((") &&
-    !refBlock.content.endsWith("))") &&
-    !refBlock.content.startsWith("{{embed ((") &&
-    !refBlock.content.endsWith("))}}")
+    !refBlock!.content.startsWith("((") &&
+    !refBlock!.content.endsWith("))") &&
+    !refBlock!.content.startsWith("{{embed ((") &&
+    !refBlock!.content.endsWith("))}}")
   ) {
     logseq.App.showMsg("Please do a swap only for reference and embed blocks.");
     return;
@@ -29,6 +29,7 @@ export const swapBlocks = async (e: any) => {
 
   const regExp = /\(\(([^)]+)\)\)/;
   const matched = regExp.exec(refBlock.content);
+
   const origBlockUUID = matched[1];
 
   const origBlock = await logseq.Editor.getBlock(origBlockUUID, {
@@ -179,15 +180,24 @@ export async function childrenWithBlockReferences(e: any) {
     // Get children blocks
     const childBlocksArr = origBlock.children;
 
+    console.log(childBlocksArr);
+    childBlocksArr.map(async (i: BlockEntity) => {
+      await logseq.Editor.insertBlock(refBlock!.uuid, `((${i.uuid}))`, {
+        before: false,
+        sibling: false,
+      });
+      await logseq.Editor.upsertBlockProperty(i.uuid, "id", i.uuid);
+    });
+
     const childBlocksRefArr = childBlocksArr.map((i: any) => ({
       content: `((${i.uuid}))`,
-    })) as unknown as IBatchBlock;
+    }));
 
     // Insert child blocks under the reference block
-    await logseq.Editor.insertBatchBlock(refBlock.uuid, childBlocksRefArr, {
-      before: false,
-      sibling: false,
-    });
+    //await logseq.Editor.insertBatchBlock(refBlock.uuid, childBlocksRefArr, {
+    //  before: false,
+    //  sibling: false,
+    //});
 
     window.setTimeout(async function () {
       await logseq.Editor.exitEditingMode();
